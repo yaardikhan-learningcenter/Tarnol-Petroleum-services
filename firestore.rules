@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only the e-mail addresses listed here can read/write. Anyone else who signs up is blocked.
+    function allowed() {
+      return request.auth != null && request.auth.token.email in [
+        'yaardikhan@gmail.com'
+        // , 'manager@example.com'
+      ];
+    }
+    match /{document=**} {
+      allow read, write: if allowed();
+    }
+  }
+}
